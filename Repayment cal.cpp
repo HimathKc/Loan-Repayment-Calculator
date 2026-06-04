@@ -1,60 +1,88 @@
-#include<iostream>
-#include<string>
-#include<iomanip>
+#include <iostream>
+#include <string>
+#include <iomanip>
 using namespace std;
+
 int main()
 {
-	double pa,air,mir,pp,rb,tip,tm,ip;
-	string lt; 
-	int sf; 
-	tip=0.0;
-	
-	cout<<"Enter principal loan amount:";
-	cin>>pa;
-	cout<<"Enter your total Number of Monthly Payments:";
-	cin>>tm;
-	cout<<"Enter your annual intrest rate:";
-	cin>>air;
-	
-	mir=(air/100)/12;
-	pp= pa/tm;
-	rb=pa;
-	
-	cout<<"_____Repayment Schedule_____"<<endl;
-cout << setw(8) << left << "Month"  << setw(15) << right << "Interest" << setw(15) << right << "Principal" << setw(15) << right << "Total"<< setw(15) << right << "Remaining" << endl;
+    double principalAmount, annualInterestRate, monthlyInterestRate;
+    double principalPayment, remainingBalance, totalInterestPaid = 0.0;
+    double interestPayment, totalMonthlyPayment;
+    int totalMonths;
+    string loanType;
+    int serviceFee;
 
-cout<<"_____________________________________________________________________" << endl;
+    cout << "Enter principal loan amount: ";
+    cin >> principalAmount;
 
-	for(int m=1;m<=tm;m++)
-	{
-		ip=rb*mir;
-	    double tmp=pp+ip;
-		rb=rb-pp;
-		tip=tip+ip;
-		
-	cout << setw(8) << left << m << setw(15) << right << ip<< setw(15) << right << pp<< setw(15) << right << tmp<< setw(15) << right << rb << endl;
-		}
-	cout<<"\n_____Final Loan Summary_____"<<endl;
-	
-	if(pa<50000)
-	{
-	 lt="Micro Loan";
-	 sf=100;
-	}
-	else if(pa>=50000 && pa<=1000000)
-	{
-		lt="Standard Loan";
-		sf=500;
-	}
-	else
-	{
-		lt="Premium Loan";
-		sf=1000;
-	}
-	double tamountp=pa+tip+sf;
-	
-	cout<<"Loan Classification:"<<lt<<endl;
-    cout<<"Mandatory Service Fee: RS"<<sf<<endl;
-	cout<<"Total Intrest Paid: RS"<<tip<<endl;
-	cout<<"Total A mout Needed to settle the loan: RS"<<tamountp<<endl;
-} 
+    cout << "Enter your total number of monthly payments: ";
+    cin >> totalMonths;
+
+    cout << "Enter your annual interest rate: ";
+    cin >> annualInterestRate;
+
+    monthlyInterestRate = (annualInterestRate / 100) / 12;
+    principalPayment = principalAmount / totalMonths;
+    remainingBalance = principalAmount;
+
+    cout << fixed << setprecision(2);
+
+    cout << endl;
+    cout << "_____ Repayment Schedule _____" << endl;
+
+    cout << setw(8) << left << "Month"
+         << setw(15) << right << "Interest"
+         << setw(15) << right << "Principal"
+         << setw(15) << right << "Total"
+         << setw(15) << right << "Remaining" << endl;
+
+    cout << "_____________________________________________________________________" << endl;
+
+    for (int month = 1; month <= totalMonths; month++)
+    {
+        interestPayment = remainingBalance * monthlyInterestRate;
+        totalMonthlyPayment = principalPayment + interestPayment;
+        remainingBalance = remainingBalance - principalPayment;
+
+        if (remainingBalance < 0.01 && remainingBalance > -0.01)
+        {
+            remainingBalance = 0;
+        }
+
+        totalInterestPaid = totalInterestPaid + interestPayment;
+
+        cout << setw(8) << left << month
+             << setw(15) << right << interestPayment
+             << setw(15) << right << principalPayment
+             << setw(15) << right << totalMonthlyPayment
+             << setw(15) << right << remainingBalance << endl;
+    }
+
+    cout << endl;
+    cout << "_____ Final Loan Summary _____" << endl;
+
+    if (principalAmount < 50000)
+    {
+        loanType = "Micro Loan";
+        serviceFee = 100;
+    }
+    else if (principalAmount >= 50000 && principalAmount <= 1000000)
+    {
+        loanType = "Standard Loan";
+        serviceFee = 500;
+    }
+    else
+    {
+        loanType = "Premium Loan";
+        serviceFee = 1000;
+    }
+
+    double totalAmountNeeded = principalAmount + totalInterestPaid + serviceFee;
+
+    cout << "Loan Classification: " << loanType << endl;
+    cout << "Mandatory Service Fee: RS " << serviceFee << endl;
+    cout << "Total Interest Paid: RS " << totalInterestPaid << endl;
+    cout << "Total Amount Needed to Settle the Loan: RS " << totalAmountNeeded << endl;
+
+    return 0;
+}
